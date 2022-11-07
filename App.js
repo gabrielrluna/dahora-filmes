@@ -8,10 +8,14 @@ import {
   View,
 } from "react-native";
 
+import { AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import logo from "./assets/images/logo.png";
 
+const corPrimaria = "#5451a6";
+
 const App = () => {
-  const corPrimaria = "#5451a6";
   const [fonteCarregada] = useFonts({
     monoton: require("./assets/fonts/Monoton-Regular.ttf"),
   });
@@ -27,19 +31,31 @@ const App = () => {
 
       <View style={estilos.viewBotoes}>
         <Pressable style={estilos.botaoInicial}>
-          <Text style={estilos.textoBotao}> Buscar Filmes</Text>
+          <Text style={estilos.textoBotao}>
+            <Ionicons name="search" size={16} color="white" />
+            Buscar Filmes
+          </Text>
         </Pressable>
         <Pressable style={estilos.botaoInicial}>
-          <Text style={estilos.textoBotao}>Favoritos</Text>
+          <Text style={estilos.textoBotao}>
+            <AntDesign name="star" size={16} color="gold" />
+            Favoritos
+          </Text>
         </Pressable>
       </View>
 
       <View style={estilos.viewRodape}>
         <Pressable style={estilos.botaoRodape}>
-          <Text style={estilos.textoBotao}> Privacidade</Text>
+          <Text style={estilos.textoBotao}>
+            <Entypo name="lock" size={16} color="white" />
+            Privacidade
+          </Text>
         </Pressable>
         <Pressable style={estilos.botaoRodape}>
-          <Text style={estilos.textoBotao}>Sobre</Text>
+          <Text style={estilos.textoBotao}>
+            <AntDesign name="team" size={16} color="white" />
+            Sobre
+          </Text>
         </Pressable>
       </View>
     </SafeAreaView>
