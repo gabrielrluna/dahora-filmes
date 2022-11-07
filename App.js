@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
+
 import logo from "./assets/images/logo.png";
 
 const App = () => {
