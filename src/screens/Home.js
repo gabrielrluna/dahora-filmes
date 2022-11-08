@@ -16,7 +16,7 @@ import logo from "../../assets/images/logo.png";
 
 const corPrimaria = "#5451a6";
 
-const App = () => {
+const Home = ({ navigation }) => {
   const [fonteCarregada] = useFonts({
     monoton: require("../../assets/fonts/Monoton-Regular.ttf"),
   });
@@ -31,13 +31,19 @@ const App = () => {
       </View>
 
       <View style={estilos.viewBotoes}>
-        <Pressable style={estilos.botaoInicial}>
+        <Pressable
+          style={estilos.botaoInicial}
+          onPress={() => navigation.navigate("FormBusca")}
+        >
           <Text style={estilos.textoBotao}>
             <Ionicons name="search" size={16} color="white" />
             Buscar Filmes
           </Text>
         </Pressable>
-        <Pressable style={estilos.botaoInicial}>
+        <Pressable
+          style={estilos.botaoInicial}
+          onPress={() => navigation.navigate("Favoritos")}
+        >
           <Text style={estilos.textoBotao}>
             <AntDesign name="star" size={16} color="gold" />
             Favoritos
@@ -46,13 +52,19 @@ const App = () => {
       </View>
 
       <View style={estilos.viewRodape}>
-        <Pressable style={estilos.botaoRodape}>
+        <Pressable
+          style={estilos.botaoRodape}
+          onPress={() => navigation.navigate("Privacidade")}
+        >
           <Text style={estilos.textoBotao}>
             <Entypo name="lock" size={16} color="white" />
             Privacidade
           </Text>
         </Pressable>
-        <Pressable style={estilos.botaoRodape}>
+        <Pressable
+          style={estilos.botaoRodape}
+          onPress={() => navigation.navigate("Sobre")}
+        >
           <Text style={estilos.textoBotao}>
             <AntDesign name="team" size={16} color="white" />
             Sobre
@@ -63,7 +75,7 @@ const App = () => {
   );
 };
 
-export default App;
+export default Home;
 
 const estilos = StyleSheet.create({
   container: {
