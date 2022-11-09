@@ -5,15 +5,24 @@ import {
   Text,
   Button,
   TextInput,
+  Alert,
   View,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
 const FormBusca = () => {
-  const [filme, setFilme] = useState("");
-  const textoDigitado = (valor) => {
-    setFilme(valor);
+  const [filme, setFilme] = useState();
+  const buscarFilmes = () => {
+    if (!filme) {
+      return Alert.alert("Você deve digitar um filme!");
+    }
+
+    Alert.alert("Filme digitado!");
+  };
+
+  const textoDigitado = (valorDigitado) => {
+    setFilme(valorDigitado);
   };
 
   return (
@@ -34,7 +43,7 @@ const FormBusca = () => {
         />
       </View>
 
-      <Button color="#5451a6" title="Procurar" />
+      <Button color="#5451a6" title="Procurar" onPress={buscarFilmes} />
     </SafeAreaView>
   );
 };
