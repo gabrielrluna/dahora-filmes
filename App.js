@@ -7,6 +7,7 @@ import FormBusca from "./src/screens/FormBusca.js";
 import Favoritos from "./src/screens/Favoritos.js";
 import Sobre from "./src/screens/Sobre.js";
 import Privacidade from "./src/screens/Privacidade.js";
+import Resultados from "./src/screens/Resultados.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,11 @@ const App = () => {
             component={Privacidade}
             name="Privacidade"
             options={{ title: "Privacidade" }}
+          />
+          <Stack.Screen
+            component={Resultados}
+            name="Resultados"
+            options={{ title: "Resultados" }}
           />
         </Stack.Navigator>
       </NavigationContainer>

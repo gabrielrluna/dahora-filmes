@@ -10,15 +10,20 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
+import Resultados from "./Resultados";
 
-const FormBusca = () => {
+const FormBusca = ({ navigation }) => {
   const [filme, setFilme] = useState();
   const buscarFilmes = () => {
     if (!filme) {
       return Alert.alert("Você deve digitar um filme!");
     }
 
-    Alert.alert("Filme digitado!");
+    /*Usamos a prop navigation (que vem do ReactNavigation
+      programado no App) para acessar uma nova tela
+      (no caso, Resultados). Para esta tela, passamos como objeto os dados 
+      digitados no formulário (neste caso, filme)*/
+    navigation.navigate("Resultados", { filme });
   };
 
   const textoDigitado = (valorDigitado) => {
