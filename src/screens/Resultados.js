@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import apiKey from "../../apiKey";
 import api from "../services/api";
+import Loading from "../components/Loading";
 
 const Resultados = ({ route }) => {
   /* Usamos a prop route (do ReactNavigation) para acessar os
@@ -10,6 +11,8 @@ const Resultados = ({ route }) => {
   (neste caso, filme) enviados para esta tela "Resultados"*/
   const { filme } = route.params;
   const [resultados, setResultados] = useState([]);
+
+  const [loading, setLoading] = useState([true]);
 
   useEffect(() => {
     async function buscarFilmes() {
@@ -23,6 +26,9 @@ const Resultados = ({ route }) => {
           },
         });
         setResultados(resposta.data.results);
+        setInterval(() => {
+          setLoading(false);
+        }, 3000);
       } catch (error) {
         console.log("Deu ruim na API: " + error.message);
       }
@@ -30,14 +36,19 @@ const Resultados = ({ route }) => {
     buscarFilmes();
   }, []);
 
-  console.log(resultados);
+  if (loading) return <Loading />;
+
   return (
     <SafeAreaView style={estilos.container}>
       <Text>Você buscou por: {filme}</Text>
+
+      {loading && <Loading />}
+
       <View>
-        {resultados.map((resultados) => {
-          return <Text key={resultados.id}> {resultados.title}</Text>;
-        })}
+        {!loading &&
+          resultados.map((resultados) => {
+            return <Text key={resultados.id}> {resultados.title}</Text>;
+          })}
       </View>
     </SafeAreaView>
   );
