@@ -1,9 +1,12 @@
-import { StyleSheet, Image, Text, View } from "react-native";
+import { StyleSheet, FlatList, Text, View } from "react-native";
 import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import apiKey from "../../apiKey";
 import api from "../services/api";
 import Loading from "../components/Loading";
+import CardFilme from "../components/CardFilme";
+import ItemSeparador from "../components/ItemSeparador";
+import ItemVazio from "../components/ItemVazio";
 
 const Resultados = ({ route }) => {
   /* Usamos a prop route (do ReactNavigation) para acessar os
@@ -26,9 +29,10 @@ const Resultados = ({ route }) => {
           },
         });
         setResultados(resposta.data.results);
-        setInterval(() => {
-          setLoading(false);
-        }, 3000);
+        // setInterval(() => {
+        //   setLoading(false);
+        // }, 3000);
+        setLoading(false);
       } catch (error) {
         console.log("Deu ruim na API: " + error.message);
       }
@@ -36,30 +40,30 @@ const Resultados = ({ route }) => {
     buscarFilmes();
   }, []);
 
-  if (loading) return <Loading />;
+  // if (loading) return <Loading />;
 
   return (
     <SafeAreaView style={estilos.container}>
-      <Text>Você buscou por: {filme}</Text>
+      <Text>
+        Sua busca por <Text style={estilos.nome}>{filme}</Text> retornou os
+        seguintes resultados:
+      </Text>
 
       {loading && <Loading />}
 
-      <View>
-        {!loading &&
-          resultados.map((resultados) => {
-            return (
-              <View key={resultados.id}>
-                <Image
-                  style={estilos.capa}
-                  source={{
-                    uri: `https://image.tmdb.org/t/p/original/${resultados.poster_path}`,
-                  }}
-                />
-
-                <Text>{resultados.title}</Text>
-              </View>
-            );
-          })}
+      <View style={estilos.viewFilmes}>
+        {!loading && (
+          <FlatList
+            // horizontal={true}
+            data={resultados}
+            ItemSeparatorComponent={ItemSeparador}
+            ListEmptyComponent={ItemVazio}
+            renderItem={({ item }) => {
+              return <CardFilme filme={item} />;
+            }}
+            keyExtractor={(item) => item.id}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -68,13 +72,15 @@ const Resultados = ({ route }) => {
 export default Resultados;
 
 const estilos = StyleSheet.create({
+  viewFilmes: {
+    marginVertical: 8,
+  },
   container: {
     flex: 1,
     padding: 16,
   },
-  capa: {
-    height: 150,
-    width: 100,
-    flexDirection: "row",
+
+  nome: {
+    fontWeight: "bold",
   },
 });
