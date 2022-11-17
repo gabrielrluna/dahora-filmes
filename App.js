@@ -1,20 +1,26 @@
+import { Button, StatusBar, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StatusBar, StyleSheet } from "react-native";
 
-import Home from "./src/screens/Home.js";
-import FormBusca from "./src/screens/FormBusca.js";
-import Favoritos from "./src/screens/Favoritos.js";
-import Sobre from "./src/screens/Sobre.js";
-import Privacidade from "./src/screens/Privacidade.js";
-import Resultados from "./src/screens/Resultados.js";
-
-const Stack = createNativeStackNavigator();
+import Favoritos from "./src/screens/Favoritos";
+import FormBusca from "./src/screens/FormBusca";
+import Home from "./src/screens/Home";
+import Privacidade from "./src/screens/Privacidade";
+import Sobre from "./src/screens/Sobre";
+import Resultados from "./src/screens/Resultados";
+import Detalhes from "./src/screens/Detalhes";
 
 const App = () => {
+  /* Inicializando através de uma constante
+  o gerenciador de navegação Stack (pilha de telas) */
+  const Stack = createNativeStackNavigator();
+
   return (
     <>
-      <StatusBar barStyle="default" />
+      <StatusBar />
+
+      {/* O NavigationContainer deve envolver todas as telas
+      navegáveis do nosso App. */}
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Home"
@@ -28,32 +34,38 @@ const App = () => {
           <Stack.Screen
             component={Home}
             name="Home"
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+            }}
           />
+
           <Stack.Screen
             component={FormBusca}
             name="FormBusca"
-            options={{ title: "Buscar filmes" }}
+            options={{
+              title: "Buscar Filmes",
+            }}
           />
+
+          <Stack.Screen component={Favoritos} name="Favoritos" />
+          <Stack.Screen component={Privacidade} name="Privacidade" />
+          <Stack.Screen component={Sobre} name="Sobre" />
+          <Stack.Screen component={Resultados} name="Resultados" />
+
           <Stack.Screen
-            component={Favoritos}
-            name="Favoritos"
-            options={{ title: "Favoritos" }}
-          />
-          <Stack.Screen
-            component={Sobre}
-            name="Sobre"
-            options={{ title: "Sobre" }}
-          />
-          <Stack.Screen
-            component={Privacidade}
-            name="Privacidade"
-            options={{ title: "Privacidade" }}
-          />
-          <Stack.Screen
-            component={Resultados}
-            name="Resultados"
-            options={{ title: "Resultados" }}
+            component={Detalhes}
+            name="Detalhes"
+            options={({ navigation }) => {
+              return {
+                headerRight: () => (
+                  <Button
+                    title="Home"
+                    onPress={() => navigation.navigate("Home")}
+                    color="black"
+                  />
+                ),
+              };
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>

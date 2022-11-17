@@ -1,21 +1,25 @@
-import { StyleSheet, FlatList, Text, View } from "react-native";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import apiKey from "../../apiKey";
 import api from "../services/api";
+import apiKey from "../../apiKey";
 import Loading from "../components/Loading";
 import CardFilme from "../components/CardFilme";
 import ItemSeparador from "../components/ItemSeparador";
 import ItemVazio from "../components/ItemVazio";
 
 const Resultados = ({ route }) => {
-  /* Usamos a prop route (do ReactNavigation) para acessar os
-   parâmetros desta rota de navegação e extrair os dados
-  (neste caso, filme) enviados para esta tela "Resultados"*/
   const { filme } = route.params;
-  const [resultados, setResultados] = useState([]);
 
-  const [loading, setLoading] = useState([true]);
+  const [resultados, setResultados] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function buscarFilmes() {
@@ -28,36 +32,31 @@ const Resultados = ({ route }) => {
             include_adult: false,
           },
         });
+
         setResultados(resposta.data.results);
-        // setInterval(() => {
-        //   setLoading(false);
-        // }, 3000);
-        setLoading(false);
+
+        setInterval(() => {
+          setLoading(false);
+        }, 3000);
       } catch (error) {
-        console.log("Deu ruim na API: " + error.message);
+        console.log("Deu ruim na busca na API: " + error.message);
       }
     }
     buscarFilmes();
   }, []);
 
-  // if (loading) return <Loading />;
-
   return (
     <SafeAreaView style={estilos.container}>
-      <Text>
-        Sua busca por <Text style={estilos.nome}>{filme}</Text> retornou os
-        seguintes resultados:
-      </Text>
-
+      <Text>Você buscou por: {filme} </Text>
       {loading && <Loading />}
 
       <View style={estilos.viewFilmes}>
         {!loading && (
           <FlatList
-            // horizontal={true}
-            data={resultados}
+            showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={ItemSeparador}
             ListEmptyComponent={ItemVazio}
+            data={resultados}
             renderItem={({ item }) => {
               return <CardFilme filme={item} />;
             }}
@@ -78,9 +77,5 @@ const estilos = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-  },
-
-  nome: {
-    fontWeight: "bold",
   },
 });
