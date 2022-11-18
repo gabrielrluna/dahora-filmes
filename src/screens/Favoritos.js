@@ -3,14 +3,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import {
   Alert,
-  Button,
   SafeAreaView,
   // FlatList,
   StyleSheet,
   Text,
   View,
   Pressable,
+  ScrollView,
 } from "react-native";
+
+import { useNavigation } from "@react-navigation/native";
 
 // import ItemSeparador from "../components/ItemSeparador";
 // import ItemVazio from "../components/ItemVazio";
@@ -35,30 +37,100 @@ const Favoritos = () => {
     carregarFavoritos();
   }, []);
 
+  const navigation = useNavigation();
+
+  const verDetalhes = (filmeSelecionado) => {
+    navigation.navigate("Detalhes", { filme: filmeSelecionado });
+  };
+
   const excluirFavoritos = async () => {
-    await AsyncStorage.removeItem("@favoritos");
-    setListaFavoritos([]);
-    Alert.alert("Parabéns", "Favoritos excluidos");
+    Alert.alert(
+      "Excluir TODOS?",
+      "Tem certeza que deseja excluir TODOS os favoritos?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => {
+            return false;
+          },
+          style: "cancel", // SOMENTE NO iOS
+        },
+        {
+          text: "Sim, to nem aí",
+          onPress: async () => {
+            await AsyncStorage.removeItem("@favoritos");
+            setListaFavoritos([]);
+          },
+          style: "destructive", // SOMENTE NO iOS
+        },
+      ]
+    );
+  };
+
+  const excluirUmFavorito = async (indice) => {
+    // Alert.alert(`Excluir filme no índice: ${indice}`);
+
+    // Etapas para a exclusão do filme escolhido
+
+    // 1) Conhecendo o índice, remover o elemento (filme do array "listaFavoritos")
+    listaFavoritos.splice(indice, 1);
+    /* SPLICE: Indicamos o índice de referência (na prática, o índice do
+      filme que queremos remover e, a partir deste índice, a quantidade de
+      elementos que queremos remover. Como aqui queremos apagar somente o
+      próprio filme escolhido, passamos "1".*/
+
+    // 2) Atualizar o storage com a lista atualizada (ou seja, sem o filme)
+    // Obs: Transformar em String antes de gravar no storage
+    await AsyncStorage.setItem("@favoritos", JSON.stringify(listaFavoritos));
+
+    // 3) Recarregar do storage a nova lista de favoritos
+    // Obs: Necessário transformar em Array/objetos antes de manipular na aplicação
+    const listaDeFilmes = JSON.parse(await AsyncStorage.getItem("@favoritos"));
+
+    // 4) Atualizar o state para um novo render na tela com a lista de favoritos
+    setListaFavoritos(listaDeFilmes);
+
+    //
   };
 
   return (
     <SafeAreaView style={estilos.safeContainer}>
       <View style={estilos.container}>
-        <Text>Quantidade: {listaFavoritos.length} </Text>
-        <Button title="Excluir Favoritos" onPress={excluirFavoritos} />
+        <View style={estilos.cabecalho}>
+          <Text>Quantidade: {listaFavoritos.length} </Text>
+          <Pressable
+            style={estilos.botaoExcluirTudo}
+            onPress={excluirFavoritos}
+          >
+            <Text style={estilos.textoExcluirTudo}>
+              <Ionicons name="trash-outline" size={16} />
+              Excluir Favoritos
+            </Text>
+          </Pressable>
+        </View>
 
-        {listaFavoritos.map((filmeFavorito) => {
-          return (
-            <Pressable key={filmeFavorito.id} style={estilos.itemFilme}>
-              <Text> {filmeFavorito.title} </Text>
-              <Pressable style={estilos.botaoExcluir}>
-                <Ionicons name="trash" size={24} color="white" />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {listaFavoritos.map((filmeFavorito, indice) => {
+            return (
+              <Pressable
+                onPress={() => verDetalhes(filmeFavorito)}
+                key={filmeFavorito.id}
+                style={estilos.itemFilme}
+              >
+                <Text style={estilos.titulo}>{filmeFavorito.title}</Text>
+                <Pressable
+                  style={estilos.botaoExcluir}
+                  // onPress={excluirUmFavorito}
+                  onPress={() => excluirUmFavorito(indice)}
+                  // onPress={excluirUmFavorito.bind(this, indice)}
+                >
+                  <Ionicons name="trash" size={24} color="white" />
+                </Pressable>
               </Pressable>
-            </Pressable>
-          );
-          // <Text key={filmeFavorito.id}> {filmeFavorito.title}</Text>;
-        })}
-
+            );
+            // <Text key={filmeFavorito.id}> {filmeFavorito.title}</Text>;
+          })}
+        </ScrollView>
         {/* <FlatList
         ItemSeparatorComponent={ItemSeparador}
         ListEmptyComponent={ItemVazio}
@@ -82,18 +154,39 @@ const estilos = StyleSheet.create({
   container: {
     flex: 1,
     padding: 8,
+    backgroundColor: "white",
   },
   itemFilme: {
     padding: 8,
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "#ccc",
+    backgroundColor: "#EEE8FC",
     marginVertical: 8,
     borderRadius: 4,
+    alignItems: "center",
   },
   botaoExcluir: {
-    backgroundColor: "red",
-    padding: 12,
+    backgroundColor: "#C0392B",
+    padding: 8,
     borderRadius: 4,
+  },
+  cabecalho: {
+    marginVertical: 8,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  botaoExcluirTudo: {
+    borderWidth: 1,
+    borderColor: "#C0392B",
+    padding: 8,
+    borderRadius: 4,
+  },
+  textoExcluirTudo: {
+    color: "#C0392B",
+  },
+  titulo: {
+    flex: 1,
+    fontSize: 14,
   },
 });
