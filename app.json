@@ -4,28 +4,40 @@
     "slug": "dahora-filmes",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/dahora.png",
+    "icon": "./assets/images/dahora.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash-dahora.png",
+      "image": "./assets/images/splash-dahora.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffe1ab"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/72f2d8a8-78ed-4e4e-88f1-b4d95e63c923"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-dahora.png",
+        "foregroundImage": "./assets/images/adaptive-dahora.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.nautico700.dahorafilmes"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "72f2d8a8-78ed-4e4e-88f1-b4d95e63c923"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }
